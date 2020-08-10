@@ -4246,7 +4246,26 @@ class TypeChecker(NodeVisitor[None], CheckerPluginInterface):
 
             return reduce_conditional_maps(partial_type_maps)
         elif isinstance(node, AssignmentExpr):
-            return self.find_isinstance_check_helper(node.target)
+            if_map = {}  # type: TypeMap
+            else_map = {}  # type: TypeMap
+
+            if_assignment_map, else_assignment_map = self.find_isinstance_check_helper(node.target)
+
+            if if_assignment_map is not None:
+                if_map.update(if_assignment_map)
+
+            if else_assignment_map is not None:
+                else_map.update(else_assignment_map)
+
+            if_condition_map, else_condition_map = self.find_isinstance_check_helper(node.value)
+
+            if if_condition_map is not None:
+                if_map.update(if_condition_map)
+
+            if else_condition_map is not None:
+                else_map.update(else_condition_map)
+
+            return if_map, else_map
         elif isinstance(node, RefExpr):
             # Restrict the type of the variable to True-ish/False-ish in the if and else branches
             # respectively
