@@ -367,6 +367,26 @@ reveal_type(z2)  # E: Name "z2" is not defined  # N: Revealed type is "Any"
 
 [builtins fixtures/isinstancelist.pyi]
 
+[case testWalrusConditionalTypeBinder]
+from typing import Union
+from typing_extensions import Literal
+
+class Good:
+    @property
+    def is_good(self) -> Literal[True]: ...
+
+class Bad:
+    @property
+    def is_good(self) -> Literal[False]: ...
+
+def get_thing() -> Union[Good, Bad]: ...
+
+if (thing := get_thing()).is_good:
+    reveal_type(thing)  # N: Revealed type is '__main__.Good'
+else:
+    reveal_type(thing)  # N: Revealed type is '__main__.Bad'
+[builtins fixtures/property.pyi]
+
 [case testWalrusPartialTypes]
 from typing import List
 
