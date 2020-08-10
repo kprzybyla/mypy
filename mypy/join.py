@@ -355,9 +355,15 @@ class TypeJoinVisitor(TypeVisitor[ProperType]):
 def join_instances(t: Instance, s: Instance) -> ProperType:
     """Calculate the join of two instance types."""
     if t.type == s.type:
+        # In some cases t will have empty mro list and
+        # falling back to object_from_instance(t) will fail.
+        # Because of that we first check whether args are
+        # empty for both t and s.
+        if not t.args and not s.args:
+            return Instance(t.type, [])
         # Simplest case: join two types with the same base type (but
         # potentially different arguments).
-        if is_subtype(t, s) or is_subtype(s, t):
+        elif is_subtype(t, s) or is_subtype(s, t):
             # Compatible; combine type arguments.
             args = []  # type: List[Type]
             # N.B: We use zip instead of indexing because the lengths might have

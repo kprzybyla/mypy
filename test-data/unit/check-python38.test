@@ -382,6 +382,15 @@ else:
     reveal_type(thing)  # N: Revealed type is '__main__.Bad'
 [builtins fixtures/property.pyi]
 
+[case testWalrusConditionalTypeCheck]
+from typing import Optional
+
+maybe_str: Optional[str]
+
+if (is_str := maybe_str is not None):
+    reveal_type(maybe_str)  # N: Revealed type is 'builtins.str'
+    reveal_type(is_str)  # N: Revealed type is 'builtins.bool'
+
 [case testWalrusPartialTypes]
 from typing import List
 
