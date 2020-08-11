@@ -4246,8 +4246,8 @@ class TypeChecker(NodeVisitor[None], CheckerPluginInterface):
 
             return reduce_conditional_maps(partial_type_maps)
         elif isinstance(node, AssignmentExpr):
-            if_map = {}  # type: TypeMap
-            else_map = {}  # type: TypeMap
+            if_map = {}
+            else_map = {}
 
             if_assignment_map, else_assignment_map = self.find_isinstance_check_helper(node.target)
 
