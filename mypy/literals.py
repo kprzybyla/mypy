@@ -162,7 +162,7 @@ class _Hasher(ExpressionVisitor[Optional[Key]]):
             return ('Index', literal_hash(e.base), literal_hash(e.index))
         return None
 
-    def visit_assignment_expr(self, e: AssignmentExpr) -> Key:
+    def visit_assignment_expr(self, e: AssignmentExpr) -> Optional[Key]:
         return literal_hash(e.target)
 
     def visit_call_expr(self, e: CallExpr) -> None:

@@ -16,7 +16,7 @@ from mypy.literals import Key, literal, literal_hash, subkeys
 from mypy.nodes import IndexExpr, MemberExpr, AssignmentExpr, NameExpr
 
 
-BindableExpression = Union[IndexExpr, MemberExpr, NameExpr]
+BindableExpression = Union[IndexExpr, MemberExpr, AssignmentExpr, NameExpr]
 
 
 class Frame:
