@@ -390,6 +390,7 @@ maybe_str: Optional[str]
 if (is_str := maybe_str is not None):
     reveal_type(maybe_str)  # N: Revealed type is 'builtins.str'
     reveal_type(is_str)  # N: Revealed type is 'builtins.bool'
+[builtins fixtures/bool.pyi]
 
 [case testWalrusPartialTypes]
 from typing import List
