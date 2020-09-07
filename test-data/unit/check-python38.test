@@ -388,10 +388,11 @@ from typing import Optional
 
 maybe_str: Optional[str]
 
-if (x := maybe_str is not None):
-    reveal_type(x)  # N: Revealed type is 'builtins.bool'
+if (is_str := maybe_str is not None):
+    reveal_type(is_str)  # N: Revealed type is 'builtins.bool'
     reveal_type(maybe_str)  # N: Revealed type is 'builtins.str'
 else:
+    reveal_type(is_str)  # N: Revealed type is 'builtins.bool'
     reveal_type(maybe_str)  # N: Revealed type is 'None'
 
 reveal_type(maybe_str)  # N: Revealed type is 'Union[builtins.str, None]'
@@ -404,6 +405,9 @@ maybe_str: Optional[str]
 
 if (x := maybe_str) is not None:
     reveal_type(x)  # N: Revealed type is 'builtins.str'
+    reveal_type(maybe_str)  # N: Revealed type is 'Union[builtins.str, None]'
+else:
+    reveal_type(x)  # N: Revealed type is 'None'
     reveal_type(maybe_str)  # N: Revealed type is 'Union[builtins.str, None]'
 
 reveal_type(maybe_str)  # N: Revealed type is 'Union[builtins.str, None]'
@@ -442,16 +446,25 @@ from typing_extensions import Literal
 
 class PropertyWrapper:
     @property
+    def f(self) -> str: ...
+    @property
     def always_false(self) -> Literal[False]: ...
 
 wrapper = PropertyWrapper()
 
-if value := wrapper.always_false:
-    reveal_type(value)  # E: Statement is unreachable
+if x := wrapper.f:
+    reveal_type(x)  # N: Revealed type is 'builtins.str'
 else:
-    reveal_type(value)  # N: Revealed type is 'Literal[False]'
+    reveal_type(x)  # N: Revealed type is 'builtins.str'
 
-reveal_type(value)  # N: Revealed type is 'Literal[False]'
+reveal_type(x)  # N: Revealed type is 'builtins.str'
+
+if y := wrapper.always_false:
+    reveal_type(y)  # E: Statement is unreachable
+else:
+    reveal_type(y)  # N: Revealed type is 'Literal[False]'
+
+reveal_type(y)  # N: Revealed type is 'Literal[False]'
 [builtins fixtures/property.pyi]
 
 [case testWalrusAssignmentAndConditionScopeForFunction]
@@ -477,9 +490,9 @@ else:
 
 reveal_type(y)  # N: Revealed type is 'Literal[False]'
 
-def also_always_false(x: int) -> Literal[False]: ...
+def always_false_with_parameter(x: int) -> Literal[False]: ...
 
-if z := also_always_false(5):
+if z := always_false_with_parameter(5):
     reveal_type(z)  # E: Statement is unreachable
 else:
     reveal_type(z)  # N: Revealed type is 'Literal[False]'
