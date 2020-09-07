@@ -383,13 +383,30 @@ else:
 [builtins fixtures/property.pyi]
 
 [case testWalrusConditionalTypeCheck]
+# flags: --strict-optional
 from typing import Optional
 
 maybe_str: Optional[str]
 
-if (is_str := maybe_str is not None):
+if (x := maybe_str is not None):
+    reveal_type(x)  # N: Revealed type is 'builtins.bool'
     reveal_type(maybe_str)  # N: Revealed type is 'builtins.str'
-    reveal_type(is_str)  # N: Revealed type is 'builtins.bool'
+else:
+    reveal_type(maybe_str)  # N: Revealed type is 'None'
+
+reveal_type(maybe_str)  # N: Revealed type is 'Union[builtins.str, None]'
+[builtins fixtures/bool.pyi]
+
+[case testWalrusConditionalTypeCheck2]
+from typing import Optional
+
+maybe_str: Optional[str]
+
+if (x := maybe_str) is not None:
+    reveal_type(x)  # N: Revealed type is 'builtins.str'
+    reveal_type(maybe_str)  # N: Revealed type is 'Union[builtins.str, None]'
+
+reveal_type(maybe_str)  # N: Revealed type is 'Union[builtins.str, None]'
 [builtins fixtures/bool.pyi]
 
 [case testWalrusPartialTypes]
