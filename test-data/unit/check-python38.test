@@ -459,21 +459,30 @@ reveal_type(value)  # N: Revealed type is 'Literal[False]'
 
 from typing_extensions import Literal
 
+def f() -> str: ...
+
+if x := f():
+    reveal_type(x)  # N: Revealed type is 'builtins.str'
+else:
+    reveal_type(x)  # N: Revealed type is 'builtins.str'
+
+reveal_type(x)  # N: Revealed type is 'builtins.str'
+
 def always_false() -> Literal[False]: ...
 
-if value := always_false():
-    reveal_type(value)  # E: Statement is unreachable
+if y := always_false():
+    reveal_type(y)  # E: Statement is unreachable
 else:
-    reveal_type(value)  # N: Revealed type is 'Literal[False]'
+    reveal_type(y)  # N: Revealed type is 'Literal[False]'
 
-reveal_type(value)  # N: Revealed type is 'Literal[False]'
+reveal_type(y)  # N: Revealed type is 'Literal[False]'
 
 def also_always_false(x: int) -> Literal[False]: ...
 
-if also_false_value := also_always_false(5):
-    reveal_type(also_false_value)  # E: Statement is unreachable
+if z := also_always_false(5):
+    reveal_type(z)  # E: Statement is unreachable
 else:
-    reveal_type(also_false_value)  # N: Revealed type is 'Literal[False]'
+    reveal_type(z)  # N: Revealed type is 'Literal[False]'
 
-reveal_type(also_false_value)  # N: Revealed type is 'Literal[False]'
+reveal_type(z)  # N: Revealed type is 'Literal[False]'
 [builtins fixtures/tuple.pyi]
